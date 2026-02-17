@@ -1,0 +1,63 @@
+{{define "content"}}
+<div class="editor-container">
+    <div class="tabs">
+        <button class="tab active" data-tab="text">Text</button>
+        <button class="tab" data-tab="preview">Preview</button>
+    </div>
+
+    <div class="tab-content active" id="text-tab">
+        <form id="create-form" method="POST" action="/create">
+            <textarea id="content" name="content" placeholder="Enter your markdown content here..." required></textarea>
+            
+            <div class="form-options">
+                <div class="form-group">
+                    <label for="url">Custom URL (optional):</label>
+                    <input type="text" id="url" name="url" placeholder="my-custom-url">
+                    <small>Leave empty for random URL. Only lowercase letters, numbers, hyphens, and underscores allowed.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_code">Edit Code (optional):</label>
+                    <input type="text" id="edit_code" name="edit_code" placeholder="Leave empty to generate">
+                    <small>Save this code to edit your entry later!</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modify_code">Modify Code (optional):</label>
+                    <input type="text" id="modify_code" name="modify_code" placeholder="Leave empty for none">
+                    <small>A limited code that only allows content editing (not URL/code changes)</small>
+                </div>
+            </div>
+
+            <input type="hidden" id="hashcash" name="hashcash">
+            
+            <div class="form-actions">
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    <span class="btn-text">Create Entry</span>
+                    <span class="btn-loading" style="display: none;">Computing proof of work...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="tab-content" id="preview-tab">
+        <div id="preview-content" class="markdown-preview">
+            <p class="text-muted">Enter content in the Text tab to see preview</p>
+        </div>
+    </div>
+</div>
+
+<div id="success-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Entry Created!</h2>
+        <p>Your entry has been created successfully.</p>
+        <div class="success-info">
+            <p><strong>URL:</strong> <a id="entry-url" href="#" target="_blank"></a></p>
+            <p><strong>Edit Code:</strong> <code id="edit-code-display"></code></p>
+            <p class="warning">⚠️ Save your edit code! You won't see it again.</p>
+        </div>
+        <button onclick="location.href='/'" class="btn btn-primary">Create Another</button>
+        <button onclick="location.href=document.getElementById('entry-url').href" class="btn btn-secondary">View Entry</button>
+    </div>
+</div>
+{{end}}

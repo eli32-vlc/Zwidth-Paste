@@ -1,0 +1,81 @@
+{{define "content"}}
+<div class="editor-container">
+    <h1>Edit Entry: {{.URL}}</h1>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="text">Text</button>
+        <button class="tab" data-tab="preview">Preview</button>
+    </div>
+
+    <div class="tab-content active" id="text-tab">
+        <form id="edit-form" method="POST" action="/edit/{{.URL}}">
+            <div class="form-group">
+                <label for="edit_code">Edit Code (required):</label>
+                <input type="password" id="edit_code" name="edit_code" required>
+            </div>
+
+            <textarea id="content" name="content" required>{{.Content}}</textarea>
+            
+            <div class="form-options">
+                <details>
+                    <summary>Advanced Options (Edit Code holders only)</summary>
+                    
+                    <div class="form-group">
+                        <label for="new_url">New URL (optional):</label>
+                        <input type="text" id="new_url" name="new_url" placeholder="Leave empty to keep current">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_edit_code">New Edit Code (optional):</label>
+                        <input type="text" id="new_edit_code" name="new_edit_code" placeholder="Leave empty to keep current">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_modify_code">New Modify Code (optional):</label>
+                        <input type="text" id="new_modify_code" name="new_modify_code" placeholder="Leave empty to keep current">
+                    </div>
+                </details>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/{{.URL}}" class="btn btn-secondary">Cancel</a>
+                <button type="button" onclick="deleteEntry()" class="btn btn-danger">Delete</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="tab-content" id="preview-tab">
+        <div id="preview-content" class="markdown-preview">
+            <p class="text-muted">Enter content in the Text tab to see preview</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteEntry() {
+    if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
+        return;
+    }
+    
+    const editCode = document.getElementById('edit_code').value;
+    if (!editCode) {
+        alert('Please enter your edit code first');
+        return;
+    }
+    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/delete/{{.URL}}';
+    
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'edit_code';
+    input.value = editCode;
+    
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{{end}}
