@@ -1,0 +1,33 @@
+{{define "content"}}
+<div class="auth-container">
+    <div class="auth-form">
+        <h1>Register</h1>
+        <p>Create an account to manage your entries</p>
+
+        <form id="register-form" method="POST" action="/register">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required minlength="3" maxlength="50">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+
+            <input type="hidden" id="hashcash" name="hashcash">
+
+            <div class="form-actions">
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    <span class="btn-text">Register</span>
+                    <span class="btn-loading" style="display: none;">Computing proof of work...</span>
+                </button>
+            </div>
+        </form>
+
+        <p class="auth-switch">
+            Already have an account? <a href="/login">Login here</a>
+        </p>
+    </div>
+</div>
+{{end}}

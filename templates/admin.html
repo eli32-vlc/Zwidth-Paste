@@ -1,0 +1,108 @@
+{{define "content"}}
+<div class="admin-dashboard">
+    <h1>Admin Dashboard</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Entries</h3>
+            <p class="stat-value">{{.Stats.total_entries}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Views</h3>
+            <p class="stat-value">{{.Stats.total_views}}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p class="stat-value">{{.Stats.total_users}}</p>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Search Entries</h2>
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-query" placeholder="Search by URL or content...">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div id="search-results"></div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Recent Entries</h2>
+        <div class="entries-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>URL</th>
+                        <th>Created</th>
+                        <th>Views</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Entries}}
+                    <tr>
+                        <td>{{.ID}}</td>
+                        <td><a href="/{{.URL}}" target="_blank">{{.URL}}</a></td>
+                        <td>{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
+                        <td>{{.ViewCount}}</td>
+                        <td>
+                            <button onclick="deleteEntry({{.ID}})" class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('search-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = document.getElementById('search-query').value;
+    
+    const response = await fetch(`/admin/search?q=${encodeURIComponent(query)}`);
+    const entries = await response.json();
+    
+    const resultsDiv = document.getElementById('search-results');
+    if (entries.length === 0) {
+        resultsDiv.innerHTML = '<p>No results found</p>';
+        return;
+    }
+    
+    let html = '<table><thead><tr><th>ID</th><th>URL</th><th>Created</th><th>Views</th><th>Actions</th></tr></thead><tbody>';
+    entries.forEach(entry => {
+        html += `<tr>
+            <td>${entry.ID}</td>
+            <td><a href="/${entry.URL}" target="_blank">${entry.URL}</a></td>
+            <td>${new Date(entry.CreatedAt).toLocaleString()}</td>
+            <td>${entry.ViewCount}</td>
+            <td><button onclick="deleteEntry(${entry.ID})" class="btn btn-danger btn-sm">Delete</button></td>
+        </tr>`;
+    });
+    html += '</tbody></table>';
+    resultsDiv.innerHTML = html;
+});
+
+async function deleteEntry(id) {
+    if (!confirm('Are you sure you want to permanently delete this entry?')) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('id', id);
+    
+    const response = await fetch('/admin/delete', {
+        method: 'POST',
+        body: formData
+    });
+    
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert('Failed to delete entry');
+    }
+}
+</script>
+{{end}}

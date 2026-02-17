@@ -1,0 +1,21 @@
+{{define "content"}}
+<div class="entry-view">
+    <div class="entry-header">
+        <h1>{{.URL}}</h1>
+        <div class="entry-actions">
+            <a href="/edit/{{.URL}}" class="btn btn-secondary">Edit</a>
+            <a href="/raw/{{.URL}}" class="btn btn-secondary">Raw</a>
+        </div>
+    </div>
+
+    <div class="entry-meta">
+        <span>Created: {{.CreatedAt}}</span>
+        <span>Updated: {{.UpdatedAt}}</span>
+        <span>Views: {{.ViewCount}}</span>
+    </div>
+
+    <div class="entry-content markdown-preview">
+        {{.Content}}
+    </div>
+</div>
+{{end}}

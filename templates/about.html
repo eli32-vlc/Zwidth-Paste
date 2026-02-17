@@ -1,0 +1,80 @@
+{{define "content"}}
+<div class="about-page">
+    <h1>About Zwidth Paste</h1>
+    
+    <section>
+        <h2>What is Zwidth Paste?</h2>
+        <p>Zwidth Paste is a simple, fast markdown-based text sharing platform. Share text content instantly with custom or random URLs, protect content with edit codes, and preview in real-time.</p>
+    </section>
+
+    <section>
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Markdown Support:</strong> Write content using markdown for rich formatting</li>
+            <li><strong>Custom URLs:</strong> Choose your own URL or use auto-generated ones</li>
+            <li><strong>Edit Codes:</strong> Protect your entries with secure edit codes</li>
+            <li><strong>Modify Codes:</strong> Share limited access codes for content-only editing</li>
+            <li><strong>No Registration Required:</strong> Create entries without signing up</li>
+            <li><strong>Spam Protection:</strong> Hashcash proof-of-work prevents abuse</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>URL Rules</h2>
+        <ul>
+            <li>Length: 2-100 characters</li>
+            <li>Allowed characters: lowercase letters, numbers, underscores, and hyphens</li>
+            <li>URLs are case-insensitive (stored as lowercase)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Content Limits</h2>
+        <ul>
+            <li>Text content: 200,000 characters maximum</li>
+            <li>Edit code: 1-100 characters</li>
+            <li>Modify code: 1-100 characters</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Edit Code vs Modify Code</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Edit Code</th>
+                    <th>Modify Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Edit content</td>
+                    <td>✅ Yes</td>
+                    <td>✅ Yes</td>
+                </tr>
+                <tr>
+                    <td>Change URL</td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td>Change codes</td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td>Delete entry</td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Spam Protection</h2>
+        <p>Zwidth Paste uses hashcash proof-of-work to prevent spam. When creating entries, registering, or logging in, your browser computes a small cryptographic puzzle. This takes a few seconds but prevents automated abuse.</p>
+    </section>
+</div>
+{{end}}
