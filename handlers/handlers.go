@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"crypto/subtle"
 	"database/sql"
 	"encoding/json"
 	"html/template"
+	"log"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -168,7 +170,11 @@ func (h *Handler) ViewEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Increment view count
-	go h.DB.IncrementViewCount(entry.ID)
+	go func() {
+		if err := h.DB.IncrementViewCount(entry.ID); err != nil {
+			log.Printf("Failed to increment view count for entry %d: %v", entry.ID, err)
+		}
+	}()
 
 	// Render markdown
 	htmlContent, err := h.MDRenderer.Render(entry.Content)
@@ -552,7 +558,11 @@ func (h *Handler) AdminLogin(w http.ResponseWriter, r *http.Request) {
 	username := strings.TrimSpace(r.FormValue("username"))
 	password := r.FormValue("password")
 
-	if username != h.AdminUsername || password != h.AdminPassword {
+	// Use constant-time comparison to prevent timing attacks
+	usernameMatch := subtle.ConstantTimeCompare([]byte(username), []byte(h.AdminUsername)) == 1
+	passwordMatch := subtle.ConstantTimeCompare([]byte(password), []byte(h.AdminPassword)) == 1
+
+	if !usernameMatch || !passwordMatch {
 		http.Error(w, "Invalid admin credentials", http.StatusUnauthorized)
 		return
 	}

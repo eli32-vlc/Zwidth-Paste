@@ -29,7 +29,7 @@ func NewRenderer() *Renderer {
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithXHTML(),
-			html.WithUnsafe(), // Allow raw HTML (be careful with user input)
+			// Removed WithUnsafe() to prevent XSS attacks from user content
 		),
 	)
 

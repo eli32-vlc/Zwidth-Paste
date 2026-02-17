@@ -1,10 +1,11 @@
 package hashcash
 
 import (
+	cryptoRand "crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"strconv"
 	"strings"
 	"time"
@@ -144,8 +145,14 @@ func countLeadingZeroBits(hexStr string) int {
 func generateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	b := make([]byte, length)
+	charsetLen := big.NewInt(int64(len(charset)))
+	
 	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+		num, err := cryptoRand.Int(cryptoRand.Reader, charsetLen)
+		if err != nil {
+			panic("failed to generate random number: " + err.Error())
+		}
+		b[i] = charset[num.Int64()]
 	}
 	return string(b)
 }

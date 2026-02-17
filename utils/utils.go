@@ -31,7 +31,11 @@ func generateRandomString(charset string, length int) string {
 	charsetLen := big.NewInt(int64(len(charset)))
 
 	for i := 0; i < length; i++ {
-		num, _ := rand.Int(rand.Reader, charsetLen)
+		num, err := rand.Int(rand.Reader, charsetLen)
+		if err != nil {
+			// Fallback to a different position if random generation fails
+			panic("failed to generate random number: " + err.Error())
+		}
 		result[i] = charset[num.Int64()]
 	}
 
@@ -70,10 +74,12 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 // GenerateSessionID generates a random session ID
-func GenerateSessionID() string {
+func GenerateSessionID() (string, error) {
 	b := make([]byte, 32)
-	rand.Read(b)
-	return base64.URLEncoding.EncodeToString(b)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(b), nil
 }
 
 // GetClientIP extracts the client IP from a request (handles proxies)
